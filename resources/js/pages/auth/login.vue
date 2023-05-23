@@ -7,6 +7,8 @@ import authV2LoginIllustrationDark from '@images/pages/auth-v2-login-illustratio
 import authV2LoginIllustrationLight from '@images/pages/auth-v2-login-illustration-light.png'
 import authV2MaskDark from '@images/pages/misc-mask-dark.png'
 import authV2MaskLight from '@images/pages/misc-mask-light.png'
+import authV1BottomShape from '@images/svg/auth-v1-bottom-shape.svg?raw'
+import authV1TopShape from '@images/svg/auth-v1-top-shape.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { computed } from 'vue'
@@ -53,73 +55,45 @@ let errors = computed(() => {
 </script>
 
 <template>
-  <VRow
-    no-gutters
-    class="auth-wrapper bg-surface"
-  >
-    <VCol
-      lg="8"
-      class="d-none d-lg-flex"
-    >
-      <div class="position-relative bg-background rounded-lg w-100 ma-8 me-0">
-        <div class="d-flex align-center justify-center w-100 h-100">
-          <VImg
-            max-width="505"
-            :src="authThemeImg"
-            class="auth-illustration mt-16 mb-2"
-          />
-        </div>
+  <div class="auth-wrapper d-flex align-center justify-center pa-4">
+    <div class="position-relative my-sm-16">
+      <!-- 👉 Top shape -->
+      <VNodeRenderer
+        :nodes="h('div', { innerHTML: authV1TopShape })"
+        class="text-primary auth-v1-top-shape d-none d-sm-block"
+      />
 
-        <VImg
-          :src="authThemeMask"
-          class="auth-footer-mask"
-        />
-      </div>
-    </VCol>
+      <!-- 👉 Bottom shape -->
+      <VNodeRenderer
+        :nodes="h('div', { innerHTML: authV1BottomShape })"
+        class="text-primary auth-v1-bottom-shape d-none d-sm-block"
+      />
 
-    <VCol
-      cols="12"
-      lg="4"
-      class="auth-card-v2 d-flex align-center justify-center"
-    >
+      <!-- 👉 Auth Card -->
       <VCard
-        flat
-        :max-width="500"
-        class="mt-12 mt-sm-0 pa-4"
+        class="auth-card pa-4"
+        max-width="448"
       >
-        <VCardText>
-          <VNodeRenderer
-            :nodes="themeConfig.app.logo"
-            class="mb-6"
-          />
+        <VCardItem class="justify-center">
+          <template #prepend>
+            <div class="d-flex">
+              <VNodeRenderer :nodes="themeConfig.app.logo" />
+            </div>
+          </template>
 
+          <VCardTitle class="font-weight-bold text-capitalize text-h5 py-1">
+            {{ themeConfig.app.title }}
+          </VCardTitle>
+        </VCardItem>
+
+        <VCardText class="pt-1">
           <h5 class="text-h5 mb-1">
-            Bienvenue sur <span class="text-capitalize"> {{ themeConfig.app.title }} </span> ! 👋🏻
+            Bienvenue sur  <span class="text-capitalize">{{ themeConfig.app.title }}</span> ! 👋🏻
           </h5>
-
           <p class="mb-0">
-            Entrez vos identifiants pour vous connecter au panel !
+            Entrez vos identifiants pour connecter au panel !
           </p>
         </VCardText>
-
-        
-        
-        <!--
-          <VCardText>
-          <VAlert
-          color="primary"
-          variant="tonal"
-          >
-          <p class="text-caption mb-2">
-          Admin Email: <strong>admin@demo.com</strong> / Pass: <strong>admin</strong>
-          </p>
-
-          <p class="text-caption mb-0">
-          Client Email: <strong>client@demo.com</strong> / Pass: <strong>client</strong>
-          </p>
-          </VAlert>
-          </VCardText>   
-        -->
         <VCardText v-if="errors">
           <VAlert
             color="error"
@@ -134,22 +108,16 @@ let errors = computed(() => {
             </p>
           </VAlert>
         </VCardText>  
-       
-       
-
         <VCardText>
-          <VForm
-            ref="refVForm"
-            @submit.prevent="login"
-          >
+          <VForm @submit.prevent="login">
             <VRow>
               <!-- email -->
               <VCol cols="12">
                 <AppTextField
                   v-model="creds.email"
+                  autofocus
                   label="Email"
                   type="email"
-                  autofocus
                 />
               </VCol>
 
@@ -157,25 +125,28 @@ let errors = computed(() => {
               <VCol cols="12">
                 <AppTextField
                   v-model="creds.password"
-                  label="Mot de passe"
+                  label="Password"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
 
-                <div class="d-flex align-center flex-wrap justify-space-between mt-2 mb-4">
+                <!-- remember me checkbox -->
+                <div class="d-flex align-center justify-space-between flex-wrap mt-2 mb-4">
                   <VCheckbox
                     v-model="creds.remember"
-                    label="Se souvenir de moi"
+                    label="Remember me"
                   />
-                  <a
+
+                  <RouterLink
                     class="text-primary ms-2 mb-1"
-                    href="#"
+                    :to="{ name: 'auth-login' }"
                   >
-                    Mot de passe oublié ?
-                  </a>
+                    Forgot Password?
+                  </RouterLink>
                 </div>
 
+                <!-- login button -->
                 <VBtn
                   block
                   type="submit"
@@ -184,49 +155,19 @@ let errors = computed(() => {
                 </VBtn>
               </VCol>
 
-              <!-- create account -->
-              <!--
-                <VCol
-                cols="12"
-                class="text-center"
-                >
-                <span>New on our platform?</span>
-
-                <a
-                class="text-primary ms-2"
-                href="#"
-                >
-                Create an account
-                </a>
-                </VCol>
-
-                <VCol
+              <VCol
                 cols="12"
                 class="d-flex align-center"
-                >
+              >
                 <VDivider />
-
-                <span class="mx-4">or</span>
-
                 <VDivider />
-                </VCol> 
-              -->
-
-              <!-- auth providers -->
-              <!--
-                <VCol
-                cols="12"
-                class="text-center"
-                >
-                <AuthProvider />
-                </VCol> 
-              -->
+              </VCol>
             </VRow>
           </VForm>
         </VCardText>
       </VCard>
-    </VCol>
-  </VRow>
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
@@ -238,3 +179,4 @@ meta:
   layout: blank
   isGuest: true
 </route>
+
