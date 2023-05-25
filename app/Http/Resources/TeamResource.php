@@ -20,7 +20,7 @@ class TeamResource extends JsonResource
             'id' => $this->id,
             'label' => $this->label,
             'description' => $this->description,
-            'created_by' => User::find($this->created_by),
+            'created_by' => User::find($this->created_by)->name,
             'created_at' => (new DateTime($this->created_at))->format('Y-m-d H:m'),
         ];
     }

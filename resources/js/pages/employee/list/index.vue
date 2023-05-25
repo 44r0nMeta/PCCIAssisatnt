@@ -1,75 +1,84 @@
 <script setup>
 import AppTextField from '@/@core/components/app-form-elements/AppTextField.vue'
-import { useTeamStore } from '@/stores/TeamStore'
-import TeamFormDialog from '@/views/pages/team/TeamFormDialog.vue'
+import { useEmployeeStore } from '@/stores/EmployeeStore'
 import { computed, onMounted, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { VDataTable } from 'vuetify/labs/VDataTable'
 
-const teamStore = useTeamStore()
+const employeeStore = useEmployeeStore()
+const router = useRouter()
 
 const search = ref('')
 
 const headers = [
   // { title: '#', key: 'id' },
-  { title: 'Libelle', key: 'label' },
-  { title: 'Description', key: 'description' },
-  { title: 'Cree Le', key: 'created_at' },
-  { title: 'Cree Par', key: 'created_by.name' },
+  { title: "Mtle", key: "mtle" },
+  { title: "Prénoms", key: "firstname" },
+  { title: "Noms", key: "lastname" },
+
+  // { title: "", key: "bithday" },
+  { title: "Téléphone", key: "phone" },
+  { title: "Email", key: "email" },
+
+  // { title: "Genre", key: "gender" },
+  { title: "Adresse", key: "address" },
+
+  // { title: "Contrat", key: "contract_type" },
+  { title: "Team", key: "team_name" },
+  { title: 'Cree Le', key: 'created_at', width: '50' },
+  { title: 'Cree Par', key: 'created_by' },
   { title: 'Action', key: 'actions', sortable: false },
 ]
 
+const selectedEmployee = ref({})
 
 let dialogState = reactive({
   delete: false,
-  form: false,
 })
 
-const setSelectedTeam = team => {
-  teamStore.$state.selectedTeam = { ...team }
-  dialogState.form = true
-
-  // console.log(team)
+// Methods
+const callEditEmployee = employee => {
+  selectedEmployee.value = { ...employee }
+  router.push({ name: "employee-edit-id", params: { id: employee?.id } })
+  console.log(employee)
 }
 
-const deleteTeam = () => {
-  teamStore.deleteTeam(teamStore.$state.selectedTeam)
-    .then(response => {
-      teamStore.fetchTeams()
-      dialogState.delete = false
-    }).catch(error => {
-      console.log(error)
-    })
-}
-
-const callDeleteTeamActionDialog = team => {
-  dialogState.delete = true
-  teamStore.$state.selectedTeam = { ...team }
-  console.log(team)
-}
-
-const closeDeleteTeamActionDialog = () => {
+const deleteEmployee = () => {
+  employeeStore.deleteEmployee(selectedEmployee.value).then(() => {
+    employeeStore.fetchEmployees()
+  }).catch(error => {
+    console.log(error)
+  })
   dialogState.delete = false
-  teamStore.$state.selectedTeam = {}
 }
 
-const callAddTeamDialog = () => {
-  teamStore.resetSelectedTeam()
-  dialogState.form = true
+const callDeleteEmployeeActionDialog = employee => {
+  selectedEmployee.value = { ...employee }
+  dialogState.delete = true
+  console.log(employee)
+}
+
+const closeDeleteEmployeeActionDialog = () => {
+  dialogState.delete = false
+}
+
+const callAddNewEmploye = () => {
+  router.push({ name: "employee-add" })
 }
 
 
-
-const teamsLoading = computed(() => {
-  return teamStore.$state.isLoading
+// Computed 
+const employeesLoading = computed(() => {
+  return employeeStore.$state.isLoading
 })
 
-const teams = computed(() => {
-  return teamStore.$state.teamList
+const employees = computed(() => {
+  return employeeStore.$state.employeeList
 })
 
 
 onMounted(() => {
-  teamStore.fetchTeams()
+  employeeStore.fetchEmployees()
 })
 </script>
 
@@ -77,7 +86,7 @@ onMounted(() => {
   <div>
     <VRow>
       <VCol cols="12">
-        <VCard title="Groupes">
+        <VCard title="Employées">
           <VCardText>
             <VCardText>
               <VRow>
@@ -100,27 +109,31 @@ onMounted(() => {
                 <VCol>
                   <VBtn
                     prepend-icon="tabler-plus"
-                    @click="callAddTeamDialog"
+                    @click="callAddNewEmploye"
                   >
-                    Creer une Team
+                    Nouveau
                   </VBtn>
                 </VCol>
               </VRow>
             </VCardText>
             <VDataTable
-              v-if="!teamsLoading"
+              v-if="!employeesLoading"
               :headers="headers"
-              :items="teams"
+              :items="employees"
               :search="search"
               :items-per-page="10"
+              fixed-header
               class="text-no-wrap"
             >
               <template #item.actions="{ item }">
                 <div class="d-flex gap-1">
-                  <IconBtn @click="setSelectedTeam(item.raw)">
+                  <IconBtn>
+                    <VIcon icon="mdi-eye-outline" />
+                  </IconBtn>
+                  <IconBtn @click="callEditEmployee(item.raw)">
                     <VIcon icon="mdi-pencil-outline" />
                   </IconBtn>
-                  <IconBtn @click="callDeleteTeamActionDialog(item.raw)">
+                  <IconBtn @click="callDeleteEmployeeActionDialog(item.raw)">
                     <VIcon icon="mdi-delete-outline" />
                   </IconBtn>
                 </div>
@@ -143,7 +156,7 @@ onMounted(() => {
     >
       <VCard>
         <VCardTitle>
-          Etes-vous sûr de  vouloir supprimer {{ teamStore.$state.selectedTeam?.label }}?
+          Etes-vous sûr de  vouloir supprimer {{ selectedEmployee?.mtle }}?
         </VCardTitle>
         <VCardActions>
           <VSpacer />
@@ -151,7 +164,7 @@ onMounted(() => {
           <VBtn
             color="error"
             variant="outlined"
-            @click="closeDeleteTeamActionDialog"
+            @click="closeDeleteEmployeeActionDialog"
           >
             Annuler
           </VBtn>
@@ -159,7 +172,7 @@ onMounted(() => {
           <VBtn
             color="success"
             variant="elevated"
-            @click="deleteTeam"
+            @click="deleteEmployee"
           >
             Supprimer
           </VBtn>
@@ -168,13 +181,6 @@ onMounted(() => {
         </VCardActions>
       </VCard>
     </VDialog>
-
-    <!-- TeamFormDialog -->
-    <TeamFormDialog
-      v-model="dialogState.form"
-      :team-data="teamStore.$state.selectedTeam"
-      @update-state="dialogState.form = !dialogState.form"
-    />
   </div>
 </template>
 
