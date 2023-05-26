@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export const authClient = axios.create({
-  baseURL: `http://localhost:8000/api`,
+  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -9,6 +9,7 @@ export const authClient = axios.create({
   },
 })
 
+console.log(import.meta.env.PROD)
 
 export default {
   async index() {

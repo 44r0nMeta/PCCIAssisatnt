@@ -81,13 +81,13 @@ const formErrors = computed(() => {
           color="error"
           variant="tonal"
         >
-          <p
+          <div
             v-for="(error, key ,index) in formErrors"
             :key="index"
-            class="text-caption mb-1"
+            class="alert-body"
           >
-            <strong>{{ error[0] }}</strong>
-          </p>
+            <strong> - {{ error[0] }} </strong>
+          </div>
         </VAlert>
       </VCardText>
       <!-- Success Alert Component -->

@@ -22,7 +22,7 @@ class StoreTeamRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'label' => ['required', 'string', 'unique:teams'],
+            'label' => ['required', 'string', 'unique:teams', 'max:20'],
             'description' => ['nullable', 'min:3', 'max:100', 'string']
         ];
     }

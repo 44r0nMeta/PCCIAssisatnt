@@ -132,7 +132,7 @@ onBeforeMount(() => {
               <!-- 👉 Last Name -->
               <VCol
                 cols="12"
-                sm="6"
+                md="6"
               >
                 <AppTextField
                   v-model="employee.lastname"
@@ -202,6 +202,7 @@ onBeforeMount(() => {
                   item-title="label"
                   item-value="id"
                   :items="teams"
+                  chips
                   clearable
                 />
               </VCol>
@@ -260,3 +261,8 @@ onBeforeMount(() => {
     </VCol>
   </VRow>
 </template>
+
+<route lang="yaml">
+  meta:
+    requiresAuth: true
+</route>

@@ -1,4 +1,5 @@
 <script setup>
+import AppAutocomplete from '@/@core/components/app-form-elements/AppAutocomplete.vue'
 import { useEmployeeStore } from '@/stores/EmployeeStore'
 import { useTeamStore } from '@/stores/TeamStore'
 import { computed, onMounted, reactive, ref } from 'vue'
@@ -187,6 +188,7 @@ onMounted(() => {
                   item-value="id"
                   :items="teams"
                   clearable
+                  chips
                 />
               </VCol>
               <!-- 👉 Mtle -->
@@ -233,3 +235,8 @@ onMounted(() => {
     </VCol>
   </VRow>
 </template>
+
+<route lang="yaml">
+  meta:
+    requiresAuth: true
+</route>

@@ -99,13 +99,13 @@ let errors = computed(() => {
             color="error"
             variant="tonal"
           >
-            <p
+            <div
               v-for="(error, key ,index) in errors"
               :key="index"
-              class="text-caption mb-1"
+              class="alert-body"
             >
-              <strong>{{ error[0] }}</strong>
-            </p>
+              <strong> - {{ error[0] }} </strong>
+            </div>
           </VAlert>
         </VCardText>  
         <VCardText>

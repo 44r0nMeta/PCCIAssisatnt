@@ -21,7 +21,7 @@ const headers = [
   { title: "Email", key: "email" },
 
   // { title: "Genre", key: "gender" },
-  { title: "Adresse", key: "address" },
+  // { title: "Adresse", key: "address" },
 
   // { title: "Contrat", key: "contract_type" },
   { title: "Team", key: "team_name" },
@@ -122,7 +122,6 @@ onMounted(() => {
               :items="employees"
               :search="search"
               :items-per-page="10"
-              fixed-header
               class="text-no-wrap"
             >
               <template #item.actions="{ item }">

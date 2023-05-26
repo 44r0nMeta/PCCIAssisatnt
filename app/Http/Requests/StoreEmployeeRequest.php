@@ -22,11 +22,11 @@ class StoreEmployeeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'mtle' => ['required', 'string', 'max:80', 'unique:employees,mtle'],
-            'firstname' => ['required', 'string', 'max:80'],
-            'lastname' => ['required', 'string', 'max:80'],
+            'mtle' => ['required', 'string', 'max:10', 'unique:employees,mtle'],
+            'firstname' => ['required', 'string', 'max:50'],
+            'lastname' => ['required', 'string', 'max:50'],
             'bithday' => ['nullable', 'date'],
-            'gender' => ['required', 'string', 'max:20'],
+            'gender' => ['required', 'string', 'max:15'],
             'phone' => ['nullable', 'string', 'max:15'],
             'email' => ['nullable', 'string', 'email'],
             'address' => ['string', 'nullable', 'max:100'],
