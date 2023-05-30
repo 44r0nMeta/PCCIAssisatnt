@@ -302,6 +302,7 @@ return [
         "time" => "heure",
         "title" => "titre",
         "titles" => "titres",
+        "today" => "aujourd'hui",
         "user" => "utilisateur",
         "users" => "utilisateurs",
         "username" => "pseudo",

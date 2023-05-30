@@ -28,8 +28,11 @@ const logout = () => {
       color="primary"
       variant="tonal"
     >
-      <VImg :src="avatar1" />
-
+      <!-- <VImg :src="avatar1" /> -->
+      <VIcon
+        icon="tabler-user"
+        size="22"
+      />
       <!-- SECTION Menu -->
       <VMenu
         activator="parent"
@@ -60,7 +63,7 @@ const logout = () => {
             </template>
 
             <VListItemTitle class="font-weight-semibold">
-              John Doe
+              {{ authStore.$state.authUser?.name }}
             </VListItemTitle>
             <VListItemSubtitle>Admin</VListItemSubtitle>
           </VListItem>

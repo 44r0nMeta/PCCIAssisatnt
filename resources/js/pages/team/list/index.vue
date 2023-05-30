@@ -14,7 +14,7 @@ const headers = [
   { title: 'Libelle', key: 'label' },
   { title: 'Description', key: 'description' },
   { title: 'Cree Le', key: 'created_at' },
-  { title: 'Cree Par', key: 'created_by.name' },
+  { title: 'Cree Par', key: 'created_by' },
   { title: 'Action', key: 'actions', sortable: false },
 ]
 

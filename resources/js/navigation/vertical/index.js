@@ -26,4 +26,10 @@ export default [
       // { title: 'View', to: { name: 'apps-user-view-id', params: { id: 21 } } },
     ],
   },
+  { 
+    title: 'Plannification', 
+
+    to: 'schedule-list',
+    icon: { icon: 'tabler-clock' }, 
+  },
 ]
