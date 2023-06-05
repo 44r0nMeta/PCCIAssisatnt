@@ -34,6 +34,10 @@ export default {
     
     return await authClient.post(`/attendance/bage`, data)
   },
+  async check(mtle) {
+    
+    return await authClient.get(`/planning/${mtle}`)
+  },
   async delete(schedule) {
     return await authClient.delete(`/schedule/${schedule?.id}`)
   },

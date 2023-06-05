@@ -12,6 +12,7 @@ import authV1TopShape from '@images/svg/auth-v1-top-shape.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { VForm } from 'vuetify/components/VForm'
 
 const authThemeImg = useGenerateImageVariant(authV2LoginIllustrationLight, authV2LoginIllustrationDark, authV2LoginIllustrationBorderedLight, authV2LoginIllustrationBorderedDark, true)
@@ -19,6 +20,7 @@ const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
 const isPasswordVisible = ref(false)
 const refVForm = ref()
 
+const router = useRouter()
 const scheduleStore = useScheduleStore()
 
 const submitSuccess = reactive({
@@ -51,6 +53,15 @@ const onSubmit = async () => {
 
 }
 
+const loadPlanning = () => {
+  if(bage.mtle)
+    router.push({ name: "portal-check", params: { mtle: bage.mtle } })
+  else
+    alert('Renseignez votre ID svp')
+}
+
+
+// computed
 let errors = computed(() => {
   return scheduleStore.$state.submitErrors?.errors
 })
@@ -148,6 +159,16 @@ let errors = computed(() => {
                 />
               </VCol>
 
+              <!-- remember me checkbox -->
+              <div class="d-flex align-center justify-space-between flex-wrap mt-2 mb-4">
+                <RouterLink
+                  to="#"
+                  class="text-primary ms-2 mb-1"
+                  @click="loadPlanning"
+                >
+                  Voir l'état de votre planning ?
+                </RouterLink>
+              </div>
               <VCol
                 cols="12"
                 class="d-flex align-center"
@@ -179,5 +200,6 @@ let errors = computed(() => {
 meta:
   layout: blank
   isGuest: true
+path: /attendance/badge
 </route>
 

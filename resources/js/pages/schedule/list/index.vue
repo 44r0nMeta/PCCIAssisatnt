@@ -289,6 +289,9 @@ onMounted(async () => {
               >
                 Ajouter
               </VBtn>
+              <IconBtn @click="scheduleStore.fetchSchedules()">
+                <VIcon icon="tabler-refresh" />
+              </IconBtn>
             </div>
           </VCardText>
 

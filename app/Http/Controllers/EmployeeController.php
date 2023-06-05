@@ -58,6 +58,7 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
+        $employee->schedules()->delete();
         $employee->delete();
 
         return response(status: 204);

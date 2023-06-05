@@ -4,6 +4,7 @@ import { defineStore } from "pinia"
 export const useScheduleStore = defineStore('scheduleStore', {
   state: () => ({
     scheduleList: [],
+    planningCheckList: [],
     selectedSchedule: {
       id: null,
       type: "",
@@ -24,6 +25,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
   actions: {
     async fetchSchedules() {
       this.selectedSchedule.isLoading = true
+      console.log('Fecthing....')
       await ScheduleService.index().then(({ data }) => {
         this.scheduleList = data.data
         this.isLoading = false
@@ -45,6 +47,14 @@ export const useScheduleStore = defineStore('scheduleStore', {
     },
     async badgeSchedule(data) {
       return await ScheduleService.bage(data)
+    },
+    async checkAttendance(mtle) {
+      this.isLoading = true
+      
+      return await ScheduleService.check(mtle).then(({ data }) => {
+        this.planningCheckList = data.data
+        this.isLoading = false
+      })
     },
 
     resetSelectedSchedule (state) {

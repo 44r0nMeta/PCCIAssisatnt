@@ -1,5 +1,5 @@
 export default [
-  { heading: 'Apps & Pages' },
+  { heading: 'Dashboard & Reporting' },
   {
     title: 'Home',
     to: { name: 'index' },

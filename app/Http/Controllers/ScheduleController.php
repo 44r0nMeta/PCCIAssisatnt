@@ -20,7 +20,7 @@ class ScheduleController extends Controller
     {
         $paginate = Request::input('paginate') ?? 10;
 
-        return ScheduleResource::collection(Schedule::orderBy('created_at', 'desc')->get());
+        return ScheduleResource::collection(Schedule::orderBy('day', 'desc')->get());
     }
 
     /**
@@ -48,6 +48,15 @@ class ScheduleController extends Controller
     {
         $employee = Employee::where('mtle', $request->mtle)->first();
 
+        if ($employee === null) {
+            return response()->json([
+                "errors" => [
+                    "mtle" => [
+                        0 => "Le champ ID Agent sélectionné est invalide."
+                    ]
+                ],
+            ], status: 422);
+        }
         // return date('Y-m-d');
         $schedule =  $employee->schedules->where('day', date('Y-m-d'))
             ->where('type', "prod")
@@ -97,6 +106,15 @@ class ScheduleController extends Controller
         }
 
         return new ScheduleResource($schedule);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+
+    public function planning(Employee $employee)
+    {
+        return ScheduleResource::collection($employee->schedules->sortByDesc('day')->take(7));
     }
 
     /**

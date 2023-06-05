@@ -24,7 +24,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth.basic')->group(function () {
     Route::apiResource('team', TeamController::class);
     Route::apiResource('employee', EmployeeController::class);
-    Route::apiResource('schedule', ScheduleController::class)->except('bage');
+    Route::apiResource('schedule', ScheduleController::class)->except(['bage', 'planning']);
 });
 
 Route::post('/attendance/bage', [ScheduleController::class, 'bage']);
+Route::get('/planning/{employee:mtle}', [ScheduleController::class, 'planning']);
