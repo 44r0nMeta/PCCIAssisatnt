@@ -9,7 +9,7 @@ export const authClient = axios.create({
   },
 })
 
-console.log(import.meta.env.PROD)
+// console.log(import.meta.env.PROD)
 
 export default {
   async index() {

@@ -2,7 +2,7 @@
 import { useEmployeeStore } from '@/stores/EmployeeStore'
 import { useScheduleStore } from '@/stores/ScheduleStore'
 import AddNewScheduleDrawer from '@/views/pages/schedule/AddNewScheduleDrawer.vue'
-import { computed, nextTick, onMounted } from 'vue'
+import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { VDataTable } from 'vuetify/labs/VDataTable'
 
 // import { useUserListStore } from '@/views/apps/user/useUserListStore'
@@ -13,10 +13,12 @@ const employeeStore = useEmployeeStore()
 // const userListStore = useUserListStore()
 
 const searchQuery = ref('')
-const selectedRole = ref()
-const selectedPlan = ref()
-const selectedStatus = ref()
+const selectedTeam = ref()
 
+const filters = reactive({
+  dateRange: null,
+  to: null,
+})
 
 // Headers
 const headers = [
@@ -59,6 +61,7 @@ const headers = [
   {
     title: 'Actions',
     key: 'actions',
+    sortable: false,
   },
 ]
 
@@ -82,39 +85,7 @@ const roles = [
   },
 ]
 
-const plans = [
-  {
-    title: 'Basic',
-    value: 'basic',
-  },
-  {
-    title: 'Company',
-    value: 'company',
-  },
-  {
-    title: 'Enterprise',
-    value: 'enterprise',
-  },
-  {
-    title: 'Team',
-    value: 'team',
-  },
-]
 
-const status = [
-  {
-    title: 'En attente',
-    value: 'pending',
-  },
-  {
-    title: 'Présent',
-    value: 'active',
-  },
-  {
-    title: 'Retard',
-    value: 'inactive',
-  },
-]
 
 
 const resolveScheduleStatusVariant = stat => {
@@ -187,6 +158,14 @@ const statusValue = key => {
   return 'En Attente...'
 }
 
+// Watchers
+
+watch(() => filters.dateRange, (newValue, oldValue) => {
+
+  if(newValue)
+    console.log(newValue)
+
+})
 
 // Computed
 const schedules = computed(() => {
@@ -222,38 +201,37 @@ onMounted(async () => {
                 sm="4"
               >
                 <AppSelect
-                  v-model="selectedRole"
-                  label="Select Role"
+                  v-model="selectedTeam"
+                  label="Team"
                   :items="roles"
                   clearable
                   clear-icon="tabler-x"
                 />
               </VCol>
-              <!-- 👉 Select Plan -->
+              <!-- 👉 Date Range -->
               <VCol
                 cols="12"
                 sm="4"
               >
-                <AppSelect
-                  v-model="selectedPlan"
-                  label="Select Plan"
-                  :items="plans"
+                <AppDateTimePicker
+                  v-model="filters.dateRange"
                   clearable
-                  clear-icon="tabler-x"
+                  label="Plage Date"
+                  :config="{mode: 'range'}"
                 />
               </VCol>
-              <!-- 👉 Select Status -->
+              <!-- 👉 End Date -->
               <VCol
                 cols="12"
                 sm="4"
               >
-                <AppSelect
-                  v-model="selectedStatus"
-                  label="Select Status"
-                  :items="status"
+                <!--
+                  <AppDateTimePicker
+                  v-model="filters.to"
+                  label="A"
                   clearable
-                  clear-icon="tabler-x"
-                />
+                  /> 
+                -->
               </VCol>
             </VRow>
           </VCardText>
@@ -306,6 +284,7 @@ onMounted(async () => {
               :search="searchQuery"
               class="text-no-wrap"
               :loading="schedulesLoading"
+              multi-sort
             >
               <template #item.employee.mtle="{item}">
                 <div class="d-flex flex-column">

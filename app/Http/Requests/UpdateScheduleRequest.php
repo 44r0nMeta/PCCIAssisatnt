@@ -32,7 +32,7 @@ class UpdateScheduleRequest extends FormRequest
             'day' => ['required', 'date'],
             'employee_id' => ['required', 'exists:employees,id'],
             'expected_start_time' => ['required'],
-            'expected_end_time' => ['required'],
+            'expected_end_time' => ['required', 'after_or_equal:' . $this->expected_start_time],
             'started_time' => ['nullable'],
             'ended_time' => ['nullable'],
             'breakdown_total_min' => ['nullable', 'integer'],

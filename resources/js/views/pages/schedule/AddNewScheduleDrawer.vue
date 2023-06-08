@@ -85,6 +85,7 @@ const updateASchedule = () => {
 
       closeNavigationDrawer()
       scheduleStore.resetSelectedSchedule()
+      submitSucces.success = false
       scheduleStore.fetchSchedules()
     })
 

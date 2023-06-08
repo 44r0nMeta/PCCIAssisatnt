@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EmployeeBageRequest;
+use DateTime;
+use App\Models\Employee;
 use App\Models\Schedule;
-use App\Http\Requests\StoreScheduleRequest;
-use App\Http\Requests\UpdateScheduleRequest;
+use Illuminate\Support\Facades\Request;
 use App\Http\Resources\EmployeeResource;
 use App\Http\Resources\ScheduleResource;
-use App\Models\Employee;
-use Illuminate\Support\Facades\Request;
+use App\Http\Requests\EmployeeBageRequest;
+use App\Http\Requests\StoreScheduleRequest;
+use App\Http\Requests\UpdateScheduleRequest;
 
 class ScheduleController extends Controller
 {
@@ -72,7 +73,8 @@ class ScheduleController extends Controller
             ], status: 422);
         }
 
-        $status = $schedule->exepected_start_time > date("H:m") ? 'R' : 'P';
+        $status = (new DateTime($schedule->expected_start_time))->format('H:i') < date("H:i") ? 'R' : 'P';
+        // return response()->json(['status' => $status]);
         if ($request->type === 'in') {
             if ($schedule->started_time !== null) {
                 return response()->json([

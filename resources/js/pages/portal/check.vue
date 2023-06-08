@@ -1,6 +1,5 @@
 <script setup>
 import { useScheduleStore } from '@/stores/ScheduleStore'
-import { setInterval } from 'timers'
 import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -74,9 +73,6 @@ onMounted(async () => {
     if(error.response.status === 404)
       router.push('/notfound')
   })
-  setInterval(() => {
-    console.log('Tick')
-  }, 100)
 })
 </script>
 
