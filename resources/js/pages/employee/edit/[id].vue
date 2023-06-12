@@ -22,6 +22,7 @@ const employee = ref({
   phone: "",
   team: "",
   address: "",
+  status: "",
 })
 
 const teams = ref([])
@@ -31,6 +32,12 @@ const submitSucces = reactive({
   success: false,
   message: null,
 })
+
+const status = [
+  { label: 'Actif', value: 'A' },
+  { label: 'Inactif', value: 'I' },
+  { label: 'Congé', value: 'C' },
+]
 
 const genders = [
   'M', 'F',
@@ -222,6 +229,18 @@ onBeforeMount(() => {
                 <AppTextarea
                   v-model="employee.address"
                   label="Adresse"
+                  rows="3"
+                  clearable
+                />
+              </VCol>
+              <!-- 👉 Status -->
+              <VCol cols="12">
+                <AppSelect
+                  v-model="employee.status"
+                  :items="status"
+                  item-value="value"
+                  item-title="label"
+                  label="Etat"
                   rows="3"
                   clearable
                 />

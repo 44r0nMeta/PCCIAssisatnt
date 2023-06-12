@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Enums\EmployeeStatus;
+use App\Http\Resources\EmployeeResource;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
-use App\Http\Resources\EmployeeResource;
 
 class EmployeeController extends Controller
 {
@@ -58,6 +59,9 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
+        $employee->update([
+            'status' => EmployeeStatus::INACTIF
+        ]);
         $employee->schedules()->delete();
         $employee->delete();
 

@@ -16,8 +16,9 @@ const searchQuery = ref('')
 const selectedTeam = ref()
 
 const filters = reactive({
-  dateRange: null,
-  to: null,
+  day: null,
+  starth: null,
+  endh: null,
 })
 
 // Headers
@@ -214,24 +215,33 @@ onMounted(async () => {
                 sm="4"
               >
                 <AppDateTimePicker
-                  v-model="filters.dateRange"
+                  v-model="filters.day"
                   clearable
-                  label="Plage Date"
-                  :config="{mode: 'range'}"
+                  label="Jour"
                 />
               </VCol>
-              <!-- 👉 End Date -->
+              <!-- 👉 Time Range -->
               <VCol
-                cols="12"
-                sm="4"
+                cols="6"
+                sm="2"
               >
-                <!--
-                  <AppDateTimePicker
-                  v-model="filters.to"
-                  label="A"
+                <AppDateTimePicker
+                  v-model="filters.starth"
+                  label="Heure 1"
                   clearable
-                  /> 
-                -->
+                  :config="{enableTime: true, noCalendar: true, dateFormat: 'H:i'}"
+                />
+              </VCol>
+              <VCol
+                cols="6"
+                sm="2"
+              >
+                <AppDateTimePicker
+                  v-model="filters.endh"
+                  label="Heure 2"
+                  clearable
+                  :config="{enableTime: true, noCalendar: true, dateFormat: 'H:i'}"
+                />
               </VCol>
             </VRow>
           </VCardText>

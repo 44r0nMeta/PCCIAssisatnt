@@ -30,6 +30,7 @@ class EmployeeResource extends JsonResource
             'contract_type' => $this->contract_type,
             'team' => $this->team_id,
             'team_name' => Team::find($this->team_id)->label,
+            'status' => $this->status,
             'created_by' => User::find($this->created_by)->name,
             'created_at' => (new DateTime($this->created_at))->format('Y-m-d'),
         ];

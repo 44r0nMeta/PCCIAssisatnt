@@ -28,7 +28,7 @@ export default {
     
     return await authClient.put(`/schedule/${schedule.id}`, schedule)
   },
-
+  
   async bage(data) {
     await authClient.get("/sanctum/csrf-cookie")
     

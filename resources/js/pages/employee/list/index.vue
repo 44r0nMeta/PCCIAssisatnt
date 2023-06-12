@@ -19,6 +19,7 @@ const headers = [
   // { title: "", key: "bithday" },
   { title: "Téléphone", key: "phone" },
   { title: "Email", key: "email" },
+  { title: "Etat", key: "status", sortable: false },
 
   // { title: "Genre", key: "gender" },
   // { title: "Adresse", key: "address" },
@@ -66,6 +67,36 @@ const callAddNewEmploye = () => {
   router.push({ name: "employee-add" })
 }
 
+const resolveEmployeeStatusVariant = stat => {
+  if (!stat)
+    return "inactive"
+    
+  const statLowerCase = stat.toLowerCase()
+  if (statLowerCase === 'a')
+    return 'success'
+  if (statLowerCase === 'c')
+    return 'warning'
+  if (statLowerCase === 'i')
+    return 'error'
+  
+  return 'primary'
+}
+
+const statusValue = key => {
+  switch (key) {
+  case 'A':
+    return 'Actif'
+    break
+  case 'C':
+    return 'Congé'
+    break
+  case 'I':
+    return 'Inactif'
+    break
+  }
+  
+  return 'En Attente...'
+}
 
 // Computed 
 const employeesLoading = computed(() => {
@@ -136,6 +167,18 @@ onMounted(() => {
                     <VIcon icon="mdi-delete-outline" />
                   </IconBtn>
                 </div>
+              </template>
+              <!-- Status -->
+              
+              <template #item.status="{ item }">
+                <VChip
+                  :color="resolveEmployeeStatusVariant(item.raw.status)"
+                  size="small"
+                  label
+                  class="text-capitalize"
+                >
+                  {{ statusValue(item.raw.status) }}
+                </VChip>
               </template> 
             </VDataTable>
             <VProgressLinear

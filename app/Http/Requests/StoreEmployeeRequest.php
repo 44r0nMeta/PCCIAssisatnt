@@ -32,6 +32,7 @@ class StoreEmployeeRequest extends FormRequest
             'address' => ['string', 'nullable', 'max:100'],
             'team' => ['required', 'exists:teams,id'],
             'contract_type' => ['string', 'nullable', 'max:20'],
+            'status' => ['string', 'required', 'max:10']
         ];
     }
 }
