@@ -22,7 +22,8 @@ class Schedule extends Model
         'ended_time',
         'breakdown_total_min',
         'memo',
-        'status'
+        'status',
+        'metadata'
     ];
 
     public function employee(): BelongsTo

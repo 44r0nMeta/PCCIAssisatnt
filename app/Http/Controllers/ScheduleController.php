@@ -76,6 +76,16 @@ class ScheduleController extends Controller
         $status = (new DateTime($schedule->expected_start_time))->format('H:i') < date("H:i") ? 'R' : 'P';
         // return response()->json(['status' => $status]);
         if ($request->type === 'in') {
+            if (!$this->hostRulePass()) {
+                return response()->json([
+                    "errors" => [
+                        "host" => [
+                            0 => "Impossible de pointer une entrée actuellement."
+                        ]
+                    ],
+                ], status: 422);
+            }
+
             if ($schedule->started_time !== null) {
                 return response()->json([
                     "errors" => [
@@ -88,6 +98,7 @@ class ScheduleController extends Controller
 
             $schedule->update([
                 "started_time" => date("H:i"),
+                "metadata" => request()->ip(),
                 "status" => $status
             ]);
         } else {
@@ -127,6 +138,29 @@ class ScheduleController extends Controller
         $schedule->update($request->validated());
 
         return new ScheduleResource($schedule);
+    }
+
+    public function hostRulePass()
+    {
+        $schedule = Schedule::where('metadata', '=', request()->ip())
+            ->where('day', date('Y-m-d'))->first();
+        if (!$schedule) {
+            return true;
+        }
+
+        $start = new DateTime($schedule->day . ' ' . $schedule->started_time);
+        $end = new DateTime(now());
+
+        // Calculate total diff minutes
+        $diff = $start->diff($end);
+        $totalMinutes = $diff->h * 60 + $diff->i;
+
+        //Unlock Badge if 30 minutes exceeded
+        if ($totalMinutes >= 60) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

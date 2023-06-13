@@ -7,6 +7,7 @@ use App\Http\Controllers\TeamController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ScheduleController;
+use App\Models\Schedule;
 use Illuminate\Routing\Router;
 
 /*
@@ -33,3 +34,35 @@ Route::middleware('auth.basic')->group(function () {
 
 Route::post('/attendance/bage', [ScheduleController::class, 'bage']);
 Route::get('/planning/{employee:mtle}', [ScheduleController::class, 'planning']);
+
+Route::get('/dev/meta', function () {
+    $schedule = Schedule::where('metadata', '=', request()->ip())
+        ->where('day', date('Y-m-d'))->first();
+    if (!$schedule) {
+        return response()->json([
+            'status' => 'Pass',
+            'message' => 'This Machine has not yet been badged today',
+        ]);
+    }
+
+    $start = new DateTime($schedule->day . ' ' . $schedule->started_time);
+    $end = new DateTime(now());
+
+    // Calculate total diff minutes
+    $diff = $start->diff($end);
+    $totalMinutes = $diff->h * 60 + $diff->i;
+
+    //Unlock Badge if 30 minutes exceeded
+    if ($totalMinutes >= 60) {
+        return response()->json([
+            'status' => 'Pass',
+            'message' => 'This Machine is now able to badge'
+        ]);
+    } else {
+        return response()->json([
+            'status' => 'Fail',
+            'message' => 'This Machine has just badged',
+            'exceeded' => $totalMinutes
+        ]);
+    }
+});
