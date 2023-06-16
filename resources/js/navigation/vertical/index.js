@@ -32,4 +32,14 @@ export default [
     to: 'schedule-list',
     icon: { icon: 'tabler-clock' }, 
   },
+  { 
+    title: 'Pauses', 
+    icon: { icon: 'tabler-antenna-bars-off' },
+    children: [
+      { title: 'Live', to: 'breaktime-list-live' },
+      { title: 'Liste' },
+
+      // { title: 'View', to: { name: 'apps-user-view-id', params: { id: 21 } } },
+    ],
+  },
 ]

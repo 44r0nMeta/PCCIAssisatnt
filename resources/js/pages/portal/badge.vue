@@ -1,4 +1,5 @@
 <script setup>
+import { useBreakTimeStore } from '@/stores/BreakTimeStore'
 import { useScheduleStore } from '@/stores/ScheduleStore'
 import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
 import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png'
@@ -22,6 +23,9 @@ const refVForm = ref()
 
 const router = useRouter()
 const scheduleStore = useScheduleStore()
+const breakTimeStore = useBreakTimeStore()
+
+const currentTime = ref('00:00:00')
 
 const submitSuccess = reactive({
   success: false,
@@ -34,24 +38,52 @@ const bage = reactive({
 })
 
 const bageType = [
-  { value: 'in', label: 'Entrée' },
-  { value: 'out', label: 'Sortie' },
+  { value: 'in', label: 'Entrée Prod' },
+  { value: 'out', label: 'Fin Prod' },
+  { value: 'start', label: 'Début Pause' },
+  { value: 'stop', label: 'Fin Pause' },
 ]
 
 
 const onSubmit = async () => {
   scheduleStore.$state.submitErrors  = []
   submitSuccess.success = false
-  scheduleStore.badgeSchedule(bage).then(({ data }) => {
-    let heure = bage.type === 'in' ? data?.data.started_time : data?.data.ended_time
-    submitSuccess.message = `Pointage effectué pour ${data?.data.employee?.firstname} ${data?.data.employee?.lastname} \n à ${heure}`
-    submitSuccess.success = true
-    console.log(data)
-  }).catch(error => {
-    scheduleStore.$state.submitErrors = error.response.data
-  })
+
+  if (['in', 'out'].includes(bage.type)) {
+    scheduleStore.badgeSchedule(bage).then(({ data }) => {
+      let heure = bage.type === 'in' ? data?.data.started_time : data?.data.ended_time
+      submitSuccess.message = `Pointage effectué pour ${data?.data.employee?.firstname} ${data?.data.employee?.lastname} \n à ${heure}`
+      submitSuccess.success = true
+      console.log(data)
+    }).catch(error => {
+      scheduleStore.$state.submitErrors = error.response.data
+    })
+    
+  } else {
+    breakTimeStore.badgeBreakTime(bage).then(({ data }) => {
+      let heure = bage.type === 'start' ? data?.data.started_time : data?.data.ended_time
+      submitSuccess.message = `Pointage de pause effectué pour ${data?.data.employee?.firstname} ${data?.data.employee?.lastname} \n à ${heure}`
+      submitSuccess.success = true
+      console.log(data)
+    }).catch(error => {
+      scheduleStore.$state.submitErrors = error.response.data
+    })
+  }
 
 }
+
+
+// Methods
+const zeroPrefix = number => {
+  return number < 10 ? "0" + number : number
+}
+
+const updateTime = () => {
+  var date = new Date()
+  currentTime.value = `${zeroPrefix(date.getHours())}:${zeroPrefix(date.getMinutes())}:${zeroPrefix(date.getSeconds())}`
+}
+
+
 
 const loadPlanning = () => {
   if(bage.mtle)
@@ -65,6 +97,10 @@ const loadPlanning = () => {
 let errors = computed(() => {
   return scheduleStore.$state.submitErrors?.errors
 })
+
+setInterval(() => {
+  updateTime()
+}, 1000)
 </script>
 
 <template>
@@ -159,7 +195,7 @@ let errors = computed(() => {
                 />
               </VCol>
 
-              <!-- remember me checkbox -->
+              <!-- Check planning -->
               <div class="d-flex align-center justify-space-between flex-wrap mt-2 mb-4">
                 <RouterLink
                   to="#"
@@ -184,6 +220,16 @@ let errors = computed(() => {
                 <VDivider />
                 <VDivider />
               </VCol>
+              <VCol
+                cols="12"
+                class="d-flex align-center"
+              >
+                <!-- Bage button -->
+                <VSpacer />
+                <VDivider />
+                <VDivider />
+                <h2>{{ currentTime }}</h2>
+              </VCol>
             </VRow>
           </VForm>
         </VCardText>
@@ -200,6 +246,6 @@ let errors = computed(() => {
 meta:
   layout: blank
   isGuest: true
-path: /attendance/badge
+path: /badge
 </route>
 

@@ -34,6 +34,10 @@ class Employee extends Model
         return $this->hasMany(Schedule::class);
     }
 
+    public function breaktimes(): HasMany
+    {
+        return $this->hasMany(BreakTime::class);
+    }
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);

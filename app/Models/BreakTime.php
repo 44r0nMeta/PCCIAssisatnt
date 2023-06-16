@@ -6,21 +6,15 @@ use App\Traits\UserTraceTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Schedule extends Model
+class BreakTime extends Model
 {
-    use HasFactory, SoftDeletes, UserTraceTrait;
+    use HasFactory, UserTraceTrait, SoftDeletes;
 
-    protected static function booted(): void
-    {
+    protected $table = 'schedules';
 
-        // Global scope to apply filter directly on Eloquent Query Call
-        static::addGlobalScope('schedule', function (Builder $builder) {
-            $builder->whereNot('type', 'break');
-        });
-    }
+    protected $primaryKey = 'id';
 
     protected $fillable = [
         'type',
@@ -36,8 +30,12 @@ class Schedule extends Model
         'metadata'
     ];
 
-    public function employee(): BelongsTo
+    protected static function booted(): void
     {
-        return $this->belongsTo(Employee::class);
+
+        // Global scope to apply filter directly on Eloquent Query Call
+        static::addGlobalScope('breaktime', function (Builder $builder) {
+            $builder->where('type', 'break');
+        });
     }
 }

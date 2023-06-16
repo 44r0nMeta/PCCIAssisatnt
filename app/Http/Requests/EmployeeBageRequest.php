@@ -22,7 +22,7 @@ class EmployeeBageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => ['required', 'in:in,out'],
+            'type' => ['required', 'in:in,out,start,stop'],
             'mtle' => ['required', 'exists:employees,mtle']
         ];
     }
