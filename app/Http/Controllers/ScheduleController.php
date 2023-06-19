@@ -155,7 +155,7 @@ class ScheduleController extends Controller
         $diff = $start->diff($end);
         $totalMinutes = $diff->h * 60 + $diff->i;
 
-        //Unlock Badge if 30 minutes exceeded
+        //Unlock Badge if 60 minutes exceeded
         if ($totalMinutes >= 60) {
             return true;
         } else {

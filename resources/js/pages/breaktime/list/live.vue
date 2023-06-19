@@ -2,7 +2,7 @@
 import { useBreakTimeStore } from '@/stores/BreakTimeStore'
 import { useEmployeeStore } from '@/stores/EmployeeStore'
 import AddNewBreakTimeDrawer from '@/views/pages/breaktime/AddNewBreakTimeDrawer.vue'
-import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { VDataTable } from 'vuetify/labs/VDataTable'
 
 // import { useUserListStore } from '@/views/apps/user/useUserListStore'
@@ -38,14 +38,14 @@ const headers = [
   //   key: 'type',
   //   sortable: false,
   // },
-  {
-    title: 'Début',
-    key: 'expected_start_time',
-  },
-  {
-    title: 'Fin',
-    key: 'expected_end_time',
-  },
+  // {
+  //   title: 'Début',
+  //   key: 'expected_start_time',
+  // },
+  // {
+  //   title: 'Fin',
+  //   key: 'expected_end_time',
+  // },
   {
     title: 'Commencé',
     key: 'started_time',
@@ -173,11 +173,13 @@ onMounted(async () => {
     employeeStore.fetchEmployees()
 })
 
-const a = ref(0)
-
-setInterval(() => {
+let liveInterval = setInterval(() => {
   breakTimeStore.fetchLiveBreakTimes()
-}, 60000)
+}, 10000)
+
+onUnmounted(() => {
+  clearInterval(liveInterval)
+})
 </script>
 
 <template>
