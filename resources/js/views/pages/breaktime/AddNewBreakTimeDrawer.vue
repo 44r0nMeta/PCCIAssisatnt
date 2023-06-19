@@ -124,7 +124,7 @@ const employees = computed(() => {
   >
     <!-- 👉 Title -->
     <AppDrawerHeaderSection
-      :title="breakTimeStore.$state.selectedBreakTime.id ? 'Mise à jour de pause' : 'Nouvelle pause'"
+      :title="breakTimeStore.$state.selectedBreakTime.id ? `Mise à jour de pause ${breakTimeStore.$state.selectedBreakTime.employee.mtle}` : 'Nouvelle pause'"
       @cancel="closeNavigationDrawer"
     />
 
@@ -165,24 +165,26 @@ const employees = computed(() => {
           >
             <VRow>
               <!-- 👉 Employee -->
-              <VCol cols="12">
+              <!--
+                <VCol cols="12">
                 <AppAutocomplete
-                  v-model="breakTimeStore.$state.selectedBreakTime.employee_id"
-                  :items="employees"
-                  :loading="!employees"
-                  item-title="firstname"
-                  item-value="id"
-                  label="Concerné"
+                v-model="breakTimeStore.$state.selectedBreakTime.employee_id"
+                :items="employees"
+                :loading="!employees"
+                item-title="firstname"
+                item-value="id"
+                label="Concerné"
                 >
-                  <template #item="{ props, item }">
-                    <VListItem
-                      v-bind="props"
-                      :title="`${item?.raw?.firstname} ${item?.raw?.lastname}`"
-                      :subtitle="item?.raw?.mtle"
-                    />
-                  </template>
+                <template #item="{ props, item }">
+                <VListItem
+                v-bind="props"
+                :title="`${item?.raw?.firstname} ${item?.raw?.lastname}`"
+                :subtitle="item?.raw?.mtle"
+                />
+                </template>
                 </AppAutocomplete>
-              </VCol>
+                </VCol> 
+              -->
               <!-- 👉 Type -->
               <VCol cols="6">
                 <AppSelect
@@ -200,6 +202,7 @@ const employees = computed(() => {
                 <AppDateTimePicker
                   v-model="breakTimeStore.$state.selectedBreakTime.day"
                   label="Jour"
+                  disabled
                 />
               </VCol>
 

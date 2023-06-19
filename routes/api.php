@@ -33,7 +33,7 @@ Route::middleware('auth.basic')->group(function () {
     Route::apiResource('schedule', ScheduleController::class)->except(['bage', 'planning']);
     Route::get('/breaktime/live', [BreakTimeController::class, 'live'])->name('breaktime.live');
     Route::apiResource('breaktime', BreakTimeController::class)->except(['bage']);
-    Route::get('/team/{team}/schedules', [StatsController::class, 'getSchedulesByTeamId']);
+    Route::get('/team/{team}/schedules', [StatsController::class, 'getSchedulesByTeamId'])->name('stats.team.date');
 });
 
 Route::post('/attendance/bage', [ScheduleController::class, 'bage']);

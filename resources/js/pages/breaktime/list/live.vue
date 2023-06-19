@@ -1,25 +1,16 @@
 <script setup>
 import { useBreakTimeStore } from '@/stores/BreakTimeStore'
-import { useEmployeeStore } from '@/stores/EmployeeStore'
 import AddNewBreakTimeDrawer from '@/views/pages/breaktime/AddNewBreakTimeDrawer.vue'
-import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { VDataTable } from 'vuetify/labs/VDataTable'
 
 // import { useUserListStore } from '@/views/apps/user/useUserListStore'
 
 const breakTimeStore = useBreakTimeStore()
-const employeeStore = useEmployeeStore()
 
 // const userListStore = useUserListStore()
 
 const searchQuery = ref('')
-const selectedTeam = ref()
-
-const filters = reactive({
-  day: null,
-  starth: null,
-  endh: null,
-})
 
 // Headers
 const headers = [
@@ -27,6 +18,7 @@ const headers = [
     title: 'Personne Concerné',
     key: 'employee.mtle',
     sortable: false,
+    fixed: true,
   },
   {
     title: 'Jour',
@@ -66,27 +58,6 @@ const headers = [
     sortable: false,
   },
 ]
-
-// 👉 search filters
-const roles = [
-  {
-    title: 'Team 3535',
-    value: '3535',
-  },
-  {
-    title: 'Team 777',
-    value: '777',
-  },
-  {
-    title: 'Team 777',
-    value: '777',
-  },
-  {
-    title: 'Team Digital',
-    value: 'digit',
-  },
-]
-
 
 
 
@@ -145,15 +116,6 @@ const statusValue = key => {
   return 'En Attente...'
 }
 
-// Watchers
-
-watch(() => filters.dateRange, (newValue, oldValue) => {
-
-  if(newValue)
-    console.log(newValue)
-
-})
-
 // Computed
 const breakTimes = computed(() => {
   return breakTimeStore.$state.breakTimeList
@@ -168,9 +130,6 @@ const breakTimesLoading = computed(() => {
 // Life cycle Hooks
 onMounted(async () => {
   await breakTimeStore.fetchLiveBreakTimes()
-
-  if(!employeeStore.$state.employeeList.length)
-    employeeStore.fetchEmployees()
 })
 
 let liveInterval = setInterval(() => {

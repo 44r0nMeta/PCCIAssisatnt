@@ -15,6 +15,9 @@ export default {
   async index() {
     return await authClient.get("/schedule")
   },
+  async indexWithFilters(filters) {
+    return await authClient.get(`/team/${filters.team}/schedules`, { params: { ...filters } })
+  },
   async get(schedule) {
     return await authClient.get(`/schedule/${schedule}`)
   },

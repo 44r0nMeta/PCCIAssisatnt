@@ -33,6 +33,18 @@ export const useScheduleStore = defineStore('scheduleStore', {
         console.log(error)
       })
     },
+    async fetchSchedulesWithFilters(filters) {
+      this.selectedSchedule.isLoading = true
+      console.log('Fecthing....')
+      await ScheduleService.indexWithFilters(filters).then(({ data }) => {
+        this.scheduleList = data.data
+        this.isLoading = false
+      }).catch(error => {
+        console.log(error)
+      })
+
+      // console.log(`with filters: ${filters.team}`)
+    },
     async addSchedule (schedule){
       return await ScheduleService.store(schedule)
     },

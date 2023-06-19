@@ -1,6 +1,7 @@
 <script setup>
 import { useEmployeeStore } from '@/stores/EmployeeStore'
 import { useScheduleStore } from '@/stores/ScheduleStore'
+import { useTeamStore } from '@/stores/TeamStore'
 import AddNewScheduleDrawer from '@/views/pages/schedule/AddNewScheduleDrawer.vue'
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { VDataTable } from 'vuetify/labs/VDataTable'
@@ -9,14 +10,16 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
 
 const scheduleStore = useScheduleStore()
 const employeeStore = useEmployeeStore()
+const teamStore = useTeamStore()
 
 // const userListStore = useUserListStore()
 
 const searchQuery = ref('')
-const selectedTeam = ref()
 
+// 👉 search filters
 const filters = reactive({
   day: null,
+  team: null,
   starth: null,
   endh: null,
 })
@@ -27,6 +30,7 @@ const headers = [
     title: 'Personne Concerné',
     key: 'employee.mtle',
     sortable: false,
+    fixed: true,
   },
   {
     title: 'Jour',
@@ -65,29 +69,6 @@ const headers = [
     sortable: false,
   },
 ]
-
-// 👉 search filters
-const roles = [
-  {
-    title: 'Team 3535',
-    value: '3535',
-  },
-  {
-    title: 'Team 777',
-    value: '777',
-  },
-  {
-    title: 'Team 777',
-    value: '777',
-  },
-  {
-    title: 'Team Digital',
-    value: 'digit',
-  },
-]
-
-
-
 
 const resolveScheduleStatusVariant = stat => {
   if (!stat)
@@ -161,12 +142,15 @@ const statusValue = key => {
 
 // Watchers
 
-watch(() => filters.dateRange, (newValue, oldValue) => {
+watch(() => filters, (newValue, oldValue) => {
 
-  if(newValue)
-    console.log(newValue)
+  if(newValue.team)
+    scheduleStore.fetchSchedulesWithFilters(newValue)
+  else
+    scheduleStore.fetchSchedules()
 
-})
+
+}, { deep: true })
 
 // Computed
 const schedules = computed(() => {
@@ -177,7 +161,9 @@ const schedulesLoading = computed(() => {
   return scheduleStore.$state.isLoading
 })
 
-
+const teams = computed(() => {
+  return teamStore.$state.teamList
+})
 
 // Life cycle Hooks
 onMounted(async () => {
@@ -185,6 +171,8 @@ onMounted(async () => {
 
   if(!employeeStore.$state.employeeList.length)
     employeeStore.fetchEmployees()
+  if(!teamStore.$state.teamList.length)
+    teamStore.fetchTeams()
 })
 </script>
 
@@ -202,9 +190,11 @@ onMounted(async () => {
                 sm="4"
               >
                 <AppSelect
-                  v-model="selectedTeam"
+                  v-model="filters.team"
                   label="Team"
-                  :items="roles"
+                  :items="teams"
+                  item-title="label"
+                  item-value="id"
                   clearable
                   clear-icon="tabler-x"
                 />
@@ -227,7 +217,7 @@ onMounted(async () => {
               >
                 <AppDateTimePicker
                   v-model="filters.starth"
-                  label="Heure 1"
+                  label="Débute entre"
                   clearable
                   :config="{enableTime: true, noCalendar: true, dateFormat: 'H:i'}"
                 />
@@ -238,7 +228,7 @@ onMounted(async () => {
               >
                 <AppDateTimePicker
                   v-model="filters.endh"
-                  label="Heure 2"
+                  label="Et"
                   clearable
                   :config="{enableTime: true, noCalendar: true, dateFormat: 'H:i'}"
                 />
@@ -261,14 +251,16 @@ onMounted(async () => {
                 />
               </div>
 
-              <!-- 👉 Export button -->
-              <VBtn
+              <!--
+                👉 Export button
+                <VBtn
                 variant="tonal"
                 color="secondary"
                 prepend-icon="tabler-screen-share"
-              >
+                >
                 Export
-              </VBtn>
+                </VBtn> 
+              -->
 
               <!-- 👉 Add user button -->
               <VBtn

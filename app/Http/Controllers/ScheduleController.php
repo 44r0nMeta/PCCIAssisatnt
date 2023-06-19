@@ -21,7 +21,7 @@ class ScheduleController extends Controller
     {
         $paginate = Request::input('paginate') ?? 10;
 
-        return ScheduleResource::collection(Schedule::orderBy('day', 'desc')->orderBy('created_at', 'desc')->get());
+        return ScheduleResource::collection(Schedule::orderBy('day', 'desc')->orderBy('created_at', 'desc')->take(1000)->get());
     }
 
     /**

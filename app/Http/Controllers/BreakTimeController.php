@@ -85,9 +85,9 @@ class BreakTimeController extends Controller
                 'type' => 'break',
                 'employee_id' => $employee->id,
                 'day' => date('Y-m-d'),
-                'expected_start_time' => date('H:i'),
-                'expected_end_time' => date('H:i'),
-                'started_time' => date('H:i'),
+                'expected_start_time' => date('H:i:s'),
+                'expected_end_time' => date('H:i:s'),
+                'started_time' => date('H:i:s'),
                 'metadata' => request()->ip(),
             ]);
 
@@ -104,8 +104,8 @@ class BreakTimeController extends Controller
             }
 
             $currentBreakTime->update([
-                'expected_end_time' => date('H:i'),
-                'ended_time' => date('H:i'),
+                'expected_end_time' => date('H:i:s'),
+                'ended_time' => date('H:i:s'),
                 'status' => 'P'
             ]);
 
