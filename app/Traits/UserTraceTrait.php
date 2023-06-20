@@ -24,13 +24,13 @@ trait UserTraceTrait
         } else {
 
             static::creating(function ($model) {
-                $guest = User::where('name', 'guest')->first();
+                $guest = User::where('name', 'system')->first();
                 $model->created_by = $guest->id;
                 $model->updated_by = $guest->id;
             });
 
             static::updating(function ($model) {
-                $guest = User::where('name', 'guest')->first();
+                $guest = User::where('name', 'system')->first();
                 $model->updated_by = $guest->id;
             });
         }

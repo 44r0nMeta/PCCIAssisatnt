@@ -1,7 +1,7 @@
 export default [
   { heading: 'Dashboard & Reporting' },
   {
-    title: 'Home',
+    title: 'Dashboard',
     to: { name: 'index' },
     icon: { icon: 'tabler-smart-home' },
   },
@@ -9,6 +9,16 @@ export default [
     title: 'Second page',
     to: { name: 'second-page' },
     icon: { icon: 'tabler-file' },
+  },
+  { 
+    title: 'Reporting', 
+    icon: { icon: 'tabler-chart-area' },
+    children: [
+      { title: 'Horaire production' },
+      { title: 'Historique pauses' },
+
+      // { title: 'View', to: { name: 'apps-user-view-id', params: { id: 21 } } },
+    ],
   },
   { heading: 'Personels & Planning' },
   { 

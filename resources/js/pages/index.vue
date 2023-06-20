@@ -1,38 +1,93 @@
 <script setup>
-const userListMeta = [
-  {
-    icon: 'tabler-user',
-    color: 'primary',
-    title: 'Session',
-    stats: '21,459',
-    percentage: +29,
-    subtitle: 'Total Users',
-  },
-  {
-    icon: 'tabler-user-plus',
-    color: 'error',
-    title: 'Paid Users',
-    stats: '4,567',
-    percentage: +18,
-    subtitle: 'Last week analytics',
-  },
-  {
-    icon: 'tabler-user-check',
-    color: 'success',
-    title: 'Active Users',
-    stats: '19,860',
-    percentage: -14,
-    subtitle: 'Last week analytics',
-  },
-  {
-    icon: 'tabler-user-exclamation',
-    color: 'warning',
-    title: 'Pending Users',
-    stats: '237',
-    percentage: +42,
-    subtitle: 'Last week analytics',
-  },
-]
+import { useStatsStore } from '@/stores/StatsStore'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+
+const statsStore = useStatsStore()
+
+const dashboadStats = computed(() => {
+  return statsStore.$state.dashboard
+})
+
+let userListMeta = ref()
+
+
+// Methods
+const refreshValue = () => {
+  userListMeta.value = [
+    {
+      icon: 'tabler-user',
+      color: 'primary',
+      title: 'Production',
+      stats: dashboadStats.value.awaitToday,
+
+      percentage: +100,
+      subtitle: 'Total Prévus',
+    },
+    {
+      icon: 'tabler-user-check',
+      color: 'success',
+      title: 'Production',
+      stats: dashboadStats.value.presentToday,
+      percentage: -14,
+      subtitle: 'Présents',
+    },
+    {
+      icon: 'tabler-user-exclamation',
+      color: 'warning',
+      title: 'Production',
+      stats: dashboadStats.value.lateToday,
+      percentage: +42,
+      subtitle: 'Retards',
+    },
+    {
+      icon: 'tabler-user-off',
+      color: 'primary',
+      title: 'Production',
+      stats: dashboadStats.value.offToday,
+      percentage: +42,
+      subtitle: 'Agents OFF',
+    },
+    {
+      icon: 'tabler-user-pause',
+      color: 'secondary',
+      title: 'Pauses',
+      stats: dashboadStats.value.totalBreakTime,
+      percentage: +18,
+      subtitle: 'Total des pauses',
+    },
+    {
+      icon: 'tabler-user-cancel',
+      color: 'warning',
+      title: 'Pauses',
+      stats: dashboadStats.value.currentlyInBreaktime,
+      percentage: +18,
+      subtitle: 'En pause actuellement',
+    },
+
+  // {
+  //   icon: 'tabler-user-minus',
+  //   color: 'error',
+  //   title: 'Production',
+  //   stats: '4,567',
+  //   percentage: +18,
+  //   subtitle: 'Absents',
+  // },
+  ]
+}
+
+
+onMounted(async () => {
+  await statsStore.fetchDashboardStats()
+  refreshValue()
+})
+
+onUnmounted(() => {
+  clearInterval(dashboardInterval)
+})
+let dashboardInterval = setInterval(() => {
+  statsStore.fetchDashboardStats()
+  refreshValue()
+}, 10000)
 </script>
 
 <template>
@@ -68,7 +123,15 @@ const userListMeta = [
         sm="6"
         lg="3"
       >
-        <VCard>
+        <VCard
+          v-if="dashboadStats.isLoading"
+          loading="true"
+        >
+          <VCardText class="d-flex justify-space-between">
+            <div />
+          </VCardText>
+        </VCard>
+        <VCard v-else>
           <VCardText class="d-flex justify-space-between">
             <div>
               <span>{{ meta.title }}</span>
@@ -76,7 +139,7 @@ const userListMeta = [
                 <h6 class="text-h4">
                   {{ meta.stats }}
                 </h6>
-                <span :class="meta.percentage > 0 ? 'text-success' : 'text-error'">( {{ meta.percentage > 0 ? '+' : '' }} {{ meta.percentage }}%)</span>
+                <!-- <span :class="meta.percentage > 0 ? 'text-success' : 'text-error'">( {{ meta.percentage > 0 ? '+' : '' }} {{ meta.percentage }}%)</span> -->
               </div>
               <span>{{ meta.subtitle }}</span>
             </div>

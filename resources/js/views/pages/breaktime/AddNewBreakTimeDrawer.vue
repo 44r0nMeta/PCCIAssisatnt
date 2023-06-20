@@ -82,7 +82,7 @@ const updateABreakTime = () => {
       closeNavigationDrawer()
       breakTimeStore.resetSelectedBreakTime()
       submitSucces.success = false
-      breakTimeStore.fetchBreakTimes()
+      breakTimeStore.fetchLiveBreakTimes()
     })
 
     // refForm?.value.reset()

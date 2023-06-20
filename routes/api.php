@@ -34,6 +34,9 @@ Route::middleware('auth.basic')->group(function () {
     Route::get('/breaktime/live', [BreakTimeController::class, 'live'])->name('breaktime.live');
     Route::apiResource('breaktime', BreakTimeController::class)->except(['bage']);
     Route::get('/team/{team}/schedules', [StatsController::class, 'getSchedulesByTeamId'])->name('stats.team.date');
+    Route::group(['prefix' => 'stats', 'as' => 'stats.'], function () {
+        Route::get('/dashboard', [StatsController::class, 'dashboardStats'])->name('dashboard');
+    });
 });
 
 Route::post('/attendance/bage', [ScheduleController::class, 'bage']);
