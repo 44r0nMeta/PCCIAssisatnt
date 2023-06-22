@@ -63,6 +63,22 @@ const refreshValue = () => {
       percentage: +18,
       subtitle: 'En pause actuellement',
     },
+    {
+      icon: 'tabler-users-group',
+      color: 'primary',
+      title: 'Agents',
+      stats: dashboadStats.value.totalEmployee,
+      percentage: +18,
+      subtitle: 'Total Employés',
+    },
+    {
+      icon: 'tabler-plane-inflight',
+      color: 'primary',
+      title: 'Agents',
+      stats: dashboadStats.value.onHolyday,
+      percentage: +18,
+      subtitle: 'En Congés',
+    },
 
   // {
   //   icon: 'tabler-user-minus',

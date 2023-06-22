@@ -11,6 +11,8 @@ export const useStatsStore= defineStore('statsStore', {
       offToday: 0,
       totalBreakTime: 0,
       currentlyInBreaktime: 0,
+      totalEmployee: 0,
+      onHolyday: 0,
       isLoading: true,
     },
   }),
@@ -26,6 +28,8 @@ export const useStatsStore= defineStore('statsStore', {
         this.dashboard.offToday = data.offToday
         this.dashboard.totalBreakTime = data.totalBreakTime
         this.dashboard.currentlyInBreaktime = data.currentlyInBreaktime
+        this.dashboard.totalEmployee = data.totalEmployee
+        this.dashboard.onHolyday = data.onHolyday
         this.dashboard.isLoading = false
       }).catch(error => {
         console.log(error)

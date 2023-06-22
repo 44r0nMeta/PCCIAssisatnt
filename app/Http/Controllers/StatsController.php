@@ -8,6 +8,7 @@ use App\Models\Schedule;
 use Illuminate\Http\Request;
 use App\Http\Resources\ScheduleResource;
 use App\Models\BreakTime;
+use App\Models\Employee;
 
 class StatsController extends Controller
 {
@@ -16,6 +17,7 @@ class StatsController extends Controller
         $day = date('Y-m-d');
         $totalSchedule = Schedule::whereDate('day', $day)->get();
         $totalBreakTime = BreakTime::whereDate('day', $day)->get();
+        $totalEmployee = Employee::all();
         // dd($totalSchedule);
         $awaitToday = $totalSchedule->whereNotIn('status', ['OFF'])->count();
         $presentToday = $totalSchedule->where('status', 'P')->count();
@@ -23,7 +25,7 @@ class StatsController extends Controller
         $waitingNow = $totalSchedule->whereNull('status')->count();
         $offToday = $totalSchedule->where('status', 'OFF')->count();
         $currentlyInBreaktime = $totalBreakTime->whereNull('status')->count();
-
+        $onHoliday = $totalEmployee->where('status', 'C')->count();
         // dd($offToday->count());
         return response()->json([
             'awaitToday' => $awaitToday,
@@ -32,7 +34,9 @@ class StatsController extends Controller
             'waitingNow' => $waitingNow,
             'offToday' => $offToday,
             'totalBreakTime' => $totalBreakTime->count(),
-            'currentlyInBreaktime' => $currentlyInBreaktime
+            'currentlyInBreaktime' => $currentlyInBreaktime,
+            'totalEmployee' => $totalEmployee->count(),
+            'onHolyday' => $onHoliday
         ]);
     }
 

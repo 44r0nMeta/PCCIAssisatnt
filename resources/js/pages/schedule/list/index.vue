@@ -61,7 +61,8 @@ const headers = [
   {
     title: 'Status',
     key: 'status',
-    sortable: false,
+
+    // sortable: false,
   },
   {
     title: 'Actions',
