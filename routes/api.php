@@ -36,6 +36,8 @@ Route::middleware('auth.basic')->group(function () {
     Route::get('/team/{team}/schedules', [StatsController::class, 'getSchedulesByTeamId'])->name('stats.team.date');
     Route::group(['prefix' => 'stats', 'as' => 'stats.'], function () {
         Route::get('/dashboard', [StatsController::class, 'dashboardStats'])->name('dashboard');
+        Route::get('/schedules', [StatsController::class, 'productionReporting'])->name('schedule');
+        Route::get('/schedules/cumul', [StatsController::class, 'productionReportingCumul'])->name('schedule.cumul');
     });
 });
 

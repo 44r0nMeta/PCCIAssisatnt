@@ -40,4 +40,15 @@ class Schedule extends Model
     {
         return $this->belongsTo(Employee::class);
     }
+
+    public function hasTransport(): bool
+    {
+        if ($this->status == "AP" && $this->expected_end_time >= "12:00:00") {
+            return true;
+        } elseif ($this->ended_time >= "21:00:00") {
+            return true;
+        }
+
+        return false;
+    }
 }
