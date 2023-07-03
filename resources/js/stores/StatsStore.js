@@ -15,6 +15,14 @@ export const useStatsStore= defineStore('statsStore', {
       onHolyday: 0,
       isLoading: true,
     },
+    productionReports: {
+      loading: true,
+      list: [],
+    },
+    productionReportsCumul: {
+      loading: true,
+      list: [],
+    },
   }),
 
   actions: {
@@ -32,6 +40,17 @@ export const useStatsStore= defineStore('statsStore', {
         this.dashboard.onHolyday = data.onHolyday
         this.dashboard.isLoading = false
       }).catch(error => {
+        console.log(error)
+      })
+    },
+
+    async fecthProductionReporting(filters) {
+      return await StatsService.productionReporting(filters).then(({ data }) => {
+        if(!filters.export)
+          this.productionReports.list = data.data
+
+        this.productionReports.loading = false
+      }).catch(error =>{
         console.log(error)
       })
     },

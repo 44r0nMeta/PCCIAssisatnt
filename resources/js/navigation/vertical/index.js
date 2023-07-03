@@ -14,7 +14,8 @@ export default [
     title: 'Reporting', 
     icon: { icon: 'tabler-chart-area' },
     children: [
-      { title: 'Horaire production' },
+      { title: 'Horaire production', to: 'reporting-production' },
+      { title: 'Cumul des Horaires' },
       { title: 'Historique pauses' },
 
       // { title: 'View', to: { name: 'apps-user-view-id', params: { id: 21 } } },

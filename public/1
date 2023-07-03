@@ -1,0 +1,16 @@
+Date;"ID Agent";Noms;Prenoms;"Heure debut prevu";"Heure fin prevu";"Heure commence";"Heure termine";Decision;Transport;Memo
+2023-06-22;8000;AMETEPE;Ali;12:00:00;21:30:00;11:27:00;15:58:00;P;Non;
+2023-06-22;8005;OPA;Yao;12:00:00;21:30:00;12:00:00;13:28:53;P;Non;
+2023-06-21;8003;LATE;Princess;00:00:00;00:00:00;00:00:00;00:00:00;OFF;Non;
+2023-06-20;8003;LATE;Princess;15:00:00;21:30:00;17:24:00;21:30:00;AR;Oui;
+2023-06-20;8005;OPA;Yao;13:00:00;21:30:00;12:55:00;21:30:00;P;Oui;
+2023-06-20;8009;GNASSINGBE;"Koffi Léopold";06:30:00;14:00:00;12:21:00;14:05:00;R;Non;
+2023-06-19;8005;OPA;Yao;13:30:00;21:30:00;13:15:00;21:30:00;P;Oui;
+2023-06-16;8002;WOMSI;"Vincent Yao";12:00:00;21:00:00;18:01:00;18:14:00;R;Non;
+2023-06-16;8005;OPA;Yao;12:00:00;21:00:00;17:59:00;18:14:00;R;Non;
+2023-06-13;8002;WOMSI;"Vincent Yao";12:30:00;21:30:00;12:00:00;21:30:00;P;Oui;
+2023-06-08;8005;OPA;Yao;00:00:00;00:00:00;00:00:00;00:00:00;OFF;Non;
+2023-06-08;8002;WOMSI;"Vincent Yao";06:20:00;14:00:00;10:45:00;10:47:00;AR;Non;
+2023-06-07;8005;OPA;Yao;06:30:00;14:00:00;18:15:00;18:29:00;R;Non;
+2023-06-06;8002;WOMSI;"Vincent Yao";06:30:00;14:00:00;07:24:00;14:10:00;R;Non;"Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur tempora ratione quo laborum ullam ex voluptate sequi officia aut necessitatibus, doloribus est praesentium voluptates earum unde ipsam reprehenderit et dolor."
+2023-06-05;8002;WOMSI;"Vincent Yao";00:00:00;00:00:00;00:00:00;00:00:00;OFF;Non;
