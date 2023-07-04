@@ -54,5 +54,15 @@ export const useStatsStore= defineStore('statsStore', {
         console.log(error)
       })
     },
+    async fecthProductionReportingCumul(filters) {
+      return await StatsService.productionReportingCumul(filters).then(({ data }) => {
+        if(!filters.export)
+          this.productionReportsCumul.list = data.data
+
+        this.productionReportsCumul.loading = false
+      }).catch(error =>{
+        console.log(error)
+      })
+    },
   },
 })

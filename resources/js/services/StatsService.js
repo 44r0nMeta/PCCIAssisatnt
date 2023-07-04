@@ -25,7 +25,7 @@ export default {
           const link = document.createElement('a')
 
           link.href = url
-          link.setAttribute('download', `ExportProduction_${(new Date()).toLocaleDateString().replaceAll('/', '-')}.csv`) //or any other extension
+          link.setAttribute('download', `Export_Production_${(new Date()).toLocaleDateString().replaceAll('/', '-')}.csv`) //or any other extension
           document.body.appendChild(link)
           link.click()
         })
@@ -37,6 +37,23 @@ export default {
   },
 
   async productionReportingCumul(filters) {
-    return await authClient.get(`/stats/schedules/cumul`, { params: { ...filters } })
+    if(filters.export){
+      await authClient.get(`/stats/schedules/cumul`, { params: { ...filters }, responseType: 'text/csv' })
+        .then(response => {
+          console.log(response?.data)
+
+          const url = window.URL.createObjectURL(new Blob([response?.data]))
+          const link = document.createElement('a')
+
+          link.href = url
+          link.setAttribute('download', `Export_CumulProduction_${(new Date()).toLocaleDateString().replaceAll('/', '-')}.csv`) //or any other extension
+          document.body.appendChild(link)
+          link.click()
+        })
+
+      console.log('file saved!') 
+    }else
+    
+      return await authClient.get(`/stats/schedules/cumul`, { params: { ...filters } })
   }, 
 }

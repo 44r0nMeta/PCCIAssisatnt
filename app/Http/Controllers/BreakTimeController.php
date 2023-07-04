@@ -69,6 +69,20 @@ class BreakTimeController extends Controller
             ], status: 422);
         }
         // return date('Y-m-d');
+        $schedule =  $employee->schedules->where('day', date('Y-m-d'))
+            ->where('type', "prod")
+            ->first();
+
+        if ($schedule === null) {
+            return response()->json([
+                "errors" => [
+                    "schedule" => [
+                        0 => "Aucune production trouvé aujourd'hui pour vous"
+                    ]
+                ],
+            ], status: 422);
+        }
+
         $currentBreakTime = $employee->breaktimes->where('day', date('Y-m-d'))->whereNull('ended_time')->first();
         if ($request->type === 'start') {
             if ($currentBreakTime != null) {

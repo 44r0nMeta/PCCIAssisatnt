@@ -19,8 +19,8 @@ class CumulReportingResource extends JsonResource
         return [
             // 'seconds' => $this->prodSeconds,
             // 'totalProdHour' => sprintf('%02d:%02d:%02d', ($this->prodSeconds / 3600), ($this->prodSeconds / 60 % 60), $this->prodSeconds % 60),
-            'totalProdHour' => $this->prodSeconds,
-            'totalBreakHour' => $this->breakSeconds,
+            'totalProdHour' => sprintf('%02d:%02d:%02d', ($this->prodSeconds / 3600), ($this->prodSeconds / 60 % 60), $this->prodSeconds % 60),
+            'totalBreakHour' => sprintf('%02d:%02d:%02d', ($this->breakSeconds / 3600), ($this->breakSeconds / 60 % 60), $this->breakSeconds % 60),
             'transportAmount' => $this->nightWork * 500,
             'totalProd' => $this->totalProd,
             'totalOff' => $this->totalOff,
