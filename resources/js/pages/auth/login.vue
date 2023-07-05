@@ -1,28 +1,35 @@
 <script setup>
-import { useAuthStore } from '@/stores/AuthStore'
-import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
-import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png'
-import authV2LoginIllustrationBorderedLight from '@images/pages/auth-v2-login-illustration-bordered-light.png'
-import authV2LoginIllustrationDark from '@images/pages/auth-v2-login-illustration-dark.png'
-import authV2LoginIllustrationLight from '@images/pages/auth-v2-login-illustration-light.png'
-import authV2MaskDark from '@images/pages/misc-mask-dark.png'
-import authV2MaskLight from '@images/pages/misc-mask-light.png'
-import authV1BottomShape from '@images/svg/auth-v1-bottom-shape.svg?raw'
-import authV1TopShape from '@images/svg/auth-v1-top-shape.svg?raw'
-import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
-import { themeConfig } from '@themeConfig'
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { VForm } from 'vuetify/components/VForm'
+import { useAuthStore } from "@/stores/AuthStore"
+import { useGenerateImageVariant } from "@core/composable/useGenerateImageVariant"
+import authV2LoginIllustrationBorderedDark from "@images/pages/auth-v2-login-illustration-bordered-dark.png"
+import authV2LoginIllustrationBorderedLight from "@images/pages/auth-v2-login-illustration-bordered-light.png"
+import authV2LoginIllustrationDark from "@images/pages/auth-v2-login-illustration-dark.png"
+import authV2LoginIllustrationLight from "@images/pages/auth-v2-login-illustration-light.png"
+import authV2MaskDark from "@images/pages/misc-mask-dark.png"
+import authV2MaskLight from "@images/pages/misc-mask-light.png"
+import authV1BottomShape from "@images/svg/auth-v1-bottom-shape.svg?raw"
+import authV1TopShape from "@images/svg/auth-v1-top-shape.svg?raw"
+import { VNodeRenderer } from "@layouts/components/VNodeRenderer"
+import { themeConfig } from "@themeConfig"
+import { computed } from "vue"
+import { useRoute, useRouter } from "vue-router"
+import { VForm } from "vuetify/components/VForm"
 
-const authThemeImg = useGenerateImageVariant(authV2LoginIllustrationLight, authV2LoginIllustrationDark, authV2LoginIllustrationBorderedLight, authV2LoginIllustrationBorderedDark, true)
+const authThemeImg = useGenerateImageVariant(
+  authV2LoginIllustrationLight,
+  authV2LoginIllustrationDark,
+  authV2LoginIllustrationBorderedLight,
+  authV2LoginIllustrationBorderedDark,
+  true,
+)
+
 const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
 const isPasswordVisible = ref(false)
 const refVForm = ref()
 
 const creds = reactive({
-  email: 'admin@pcci.sn',
-  password: 'password',
+  email: null,
+  password: null,
   remember: false,
 })
 
@@ -32,15 +39,14 @@ const route = useRoute()
 let query = route.redirectedFrom?.fullPath
 
 const login = async () => {
-  await authStore.login(creds)
+  await authStore
+    .login(creds)
     .then(() => {
-
-      router.push(route.query.redirect || '/')
+      router.push(route.query.redirect || "/")
     })
     .catch(error => {
       authStore.$state.authErrors = error.response.data
     })
-
 }
 
 // watch(() => authStore.user, newVal => {
@@ -88,7 +94,8 @@ let errors = computed(() => {
 
         <VCardText class="pt-1">
           <h5 class="text-h5 mb-1">
-            Bienvenue sur  <span class="text-capitalize">{{ themeConfig.app.title }}</span> ! 👋🏻
+            Bienvenue sur
+            <span class="text-capitalize">{{ themeConfig.app.title }}</span> ! 👋🏻
           </h5>
           <p class="mb-0">
             Entrez vos identifiants pour connecter au panel !
@@ -100,14 +107,14 @@ let errors = computed(() => {
             variant="tonal"
           >
             <div
-              v-for="(error, key ,index) in errors"
+              v-for="(error, key, index) in errors"
               :key="index"
               class="alert-body"
             >
               <strong> - {{ error[0] }} </strong>
             </div>
           </VAlert>
-        </VCardText>  
+        </VCardText>
         <VCardText>
           <VForm @submit.prevent="login">
             <VRow>
@@ -179,4 +186,3 @@ meta:
   layout: blank
   isGuest: true
 </route>
-
