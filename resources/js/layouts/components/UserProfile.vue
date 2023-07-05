@@ -1,16 +1,14 @@
 <script setup>
-import { useAuthStore } from '@/stores/AuthStore'
-import avatar1 from '@images/avatars/avatar-1.png'
-import { useRouter } from 'vue-router'
+import { useAuthStore } from "@/stores/AuthStore"
+import { useRouter } from "vue-router"
 
 const authStore = useAuthStore()
 const router = useRouter()
 
 const logout = () => {
-  authStore.logout()
-    .then(response => {
-      router.push({ name: 'auth-login' })
-    })
+  authStore.logout().then(response => {
+    router.push({ name: "auth-login" })
+  })
 }
 </script>
 
@@ -56,7 +54,7 @@ const logout = () => {
                     color="primary"
                     variant="tonal"
                   >
-                    <VImg :src="avatar1" />
+                    <!-- <VImg :src="avatar1" /> -->
                   </VAvatar>
                 </VBadge>
               </VListItemAction>
@@ -97,30 +95,34 @@ const logout = () => {
           </VListItem>
 
           <!-- 👉 Pricing -->
-          <VListItem link>
+          <!--
+            <VListItem link>
             <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="tabler-currency-dollar"
-                size="22"
-              />
+            <VIcon
+            class="me-2"
+            icon="tabler-currency-dollar"
+            size="22"
+            />
             </template>
 
             <VListItemTitle>Pricing</VListItemTitle>
-          </VListItem>
+            </VListItem> 
+          -->
 
           <!-- 👉 FAQ -->
-          <VListItem link>
+          <!--
+            <VListItem link>
             <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="tabler-help"
-                size="22"
-              />
+            <VIcon
+            class="me-2"
+            icon="tabler-help"
+            size="22"
+            />
             </template>
 
             <VListItemTitle>FAQ</VListItemTitle>
-          </VListItem>
+            </VListItem> 
+          -->
 
           <!-- Divider -->
           <VDivider class="my-2" />
@@ -135,9 +137,7 @@ const logout = () => {
               />
             </template>
 
-            <VListItemTitle>
-              Logout
-            </VListItemTitle>
+            <VListItemTitle> Logout </VListItemTitle>
           </VListItem>
         </VList>
       </VMenu>
