@@ -5,11 +5,12 @@ export default [
     to: { name: 'index' },
     icon: { icon: 'tabler-smart-home' },
   },
-  {
-    title: 'Second page',
-    to: { name: 'second-page' },
-    icon: { icon: 'tabler-file' },
-  },
+
+  // {
+  //   title: 'Second page',
+  //   to: { name: 'second-page' },
+  //   icon: { icon: 'tabler-file' },
+  // },
   { 
     title: 'Reporting', 
     icon: { icon: 'tabler-chart-area' },
