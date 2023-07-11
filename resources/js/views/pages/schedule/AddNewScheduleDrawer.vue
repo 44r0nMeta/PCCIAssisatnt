@@ -1,9 +1,9 @@
 <script setup>
-import AppSelect from '@/@core/components/app-form-elements/AppSelect.vue'
-import { useEmployeeStore } from '@/stores/EmployeeStore'
-import { useScheduleStore } from '@/stores/ScheduleStore'
-import { computed, nextTick } from 'vue'
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+import AppSelect from "@/@core/components/app-form-elements/AppSelect.vue"
+import { useEmployeeStore } from "@/stores/EmployeeStore"
+import { useScheduleStore } from "@/stores/ScheduleStore"
+import { computed, nextTick } from "vue"
+import { PerfectScrollbar } from "vue3-perfect-scrollbar"
 
 const props = defineProps({
   isDrawerOpen: {
@@ -12,10 +12,9 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits([
-  'update:isDrawerOpen',
-])
+const emit = defineEmits(["update:isDrawerOpen"])
 
+const isSubmitProcessing = ref(false)
 const employeeStore = useEmployeeStore()
 const scheduleStore = useScheduleStore()
 
@@ -28,7 +27,6 @@ const scheduleStatus = ref([
   { value: "DA", label: "Départ Anticipé" },
   { value: "AR", label: "Arrivé Retardé" },
   { value: "AP", label: "Absence Payé" },
-
 ])
 
 const scheduleType = ref([
@@ -37,7 +35,6 @@ const scheduleType = ref([
 
   // { value: "pause", label: "Pause" },
 ])
-
 
 const refForm = ref()
 
@@ -49,7 +46,7 @@ const submitSucces = reactive({
 // Methods
 // 👉 drawer close
 const closeNavigationDrawer = () => {
-  emit('update:isDrawerOpen', false)
+  emit("update:isDrawerOpen", false)
   nextTick(() => {
     refForm.value?.reset()
     scheduleStore.$state.submitErrors = []
@@ -57,54 +54,60 @@ const closeNavigationDrawer = () => {
 }
 
 const handleDrawerModelValueUpdate = val => {
-  emit('update:isDrawerOpen', val)
+  emit("update:isDrawerOpen", val)
 }
 
-const addNewSchedule = () => {
-  scheduleStore.addSchedule(scheduleStore.$state.selectedSchedule).then(response => {
-    submitSucces.success = true
-    submitSucces.message = "Ajouter avec succès !"
-    scheduleStore.resetSelectedSchedule()
-    scheduleStore.fetchSchedules()
-
-    // refForm?.value.reset()
-  }).catch(error => {
-    scheduleStore.$state.submitErrors = error.response.data
-    console.log(error)
-  })
-
-  // console.log('Adding')
-}
-
-const updateASchedule = () => {
-  scheduleStore.updateSchedule(scheduleStore.$state.selectedSchedule).then(response => {
-    submitSucces.success = true
-    submitSucces.message = "Mise à jour reussi !"
-    
-    nextTick(() => {
-
-      closeNavigationDrawer()
+const addNewSchedule = async () => {
+  isSubmitProcessing.value = true
+  await scheduleStore
+    .addSchedule(scheduleStore.$state.selectedSchedule)
+    .then(response => {
+      submitSucces.success = true
+      submitSucces.message = "Ajouter avec succès !"
       scheduleStore.resetSelectedSchedule()
-      submitSucces.success = false
       scheduleStore.fetchSchedules()
+
+      // refForm?.value.reset()
+    })
+    .catch(error => {
+      scheduleStore.$state.submitErrors = error.response.data
+      console.log(error)
     })
 
-    // refForm?.value.reset()
-  }).catch(error => {
-    scheduleStore.$state.submitErrors = error.response.data
-    console.log(error)
-  })
+  // console.log('Adding')
+  isSubmitProcessing.value = false
+}
+
+const updateASchedule = async () => {
+  isSubmitProcessing.value = true
+  await scheduleStore
+    .updateSchedule(scheduleStore.$state.selectedSchedule)
+    .then(response => {
+      submitSucces.success = true
+      submitSucces.message = "Mise à jour reussi !"
+
+      nextTick(() => {
+        closeNavigationDrawer()
+        scheduleStore.resetSelectedSchedule()
+        submitSucces.success = false
+        scheduleStore.fetchSchedules()
+      })
+
+      // refForm?.value.reset()
+    })
+    .catch(error => {
+      scheduleStore.$state.submitErrors = error.response.data
+      console.log(error)
+    })
 
   // console.log('Adding')
+  isSubmitProcessing.value = false
 }
 
 const onSubmit = () => {
-  scheduleStore.$state.submitErrors  = []
-  if(!scheduleStore.$state.selectedSchedule.id)
-    addNewSchedule()
-  else
-    updateASchedule()
-
+  scheduleStore.$state.submitErrors = []
+  if (!scheduleStore.$state.selectedSchedule.id) addNewSchedule()
+  else updateASchedule()
 }
 
 // Computed
@@ -128,7 +131,11 @@ const employees = computed(() => {
   >
     <!-- 👉 Title -->
     <AppDrawerHeaderSection
-      :title="scheduleStore.$state.selectedSchedule.id ? 'Mise à jour de plannification' : 'Nouvelle plannification'"
+      :title="
+        scheduleStore.$state.selectedSchedule.id
+          ? 'Mise à jour de plannification'
+          : 'Nouvelle plannification'
+      "
       @cancel="closeNavigationDrawer"
     />
 
@@ -141,7 +148,7 @@ const employees = computed(() => {
             variant="tonal"
           >
             <div
-              v-for="(error, key ,index) in formErrors"
+              v-for="(error, key, index) in formErrors"
               :key="index"
               class="alert-body"
             >
@@ -198,7 +205,6 @@ const employees = computed(() => {
                 />
               </VCol>
 
-              
               <!-- Date -->
               <VCol cols="6">
                 <AppDateTimePicker
@@ -269,6 +275,7 @@ const employees = computed(() => {
               <!-- 👉 Submit and Cancel -->
               <VCol cols="12">
                 <VBtn
+                  :loading="isSubmitProcessing"
                   type="submit"
                   class="me-3"
                 >

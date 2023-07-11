@@ -1,12 +1,12 @@
 <script setup>
-import AppAutocomplete from '@/@core/components/app-form-elements/AppAutocomplete.vue'
-import { useEmployeeStore } from '@/stores/EmployeeStore'
-import { useTeamStore } from '@/stores/TeamStore'
-import { computed, onMounted, reactive, ref } from 'vue'
-
+import AppAutocomplete from "@/@core/components/app-form-elements/AppAutocomplete.vue"
+import { useEmployeeStore } from "@/stores/EmployeeStore"
+import { useTeamStore } from "@/stores/TeamStore"
+import { computed, onMounted, reactive, ref } from "vue"
 
 const teamStore = useTeamStore()
 const employeeStore = useEmployeeStore()
+const isSubmitProcessing = ref(false)
 
 const employee = reactive({
   mtle: "",
@@ -18,7 +18,7 @@ const employee = reactive({
   phone: "",
   team: "",
   address: "",
-  status: 'A',
+  status: "A",
 })
 
 const teams = ref([])
@@ -29,33 +29,34 @@ const submitSucces = reactive({
   message: null,
 })
 
-const genders = [
-  'M', 'F',
-]
+const genders = ["M", "F"]
 
 const status = [
-  { label: 'Actif', value: 'A' },
-  { label: 'Inactif', value: 'I' },
-  { label: 'Congé', value: 'C' },
+  { label: "Actif", value: "A" },
+  { label: "Inactif", value: "I" },
+  { label: "Congé", value: "C" },
 ]
 
-const contracts = [
-  'CDD', 'CDI', 'Stage', 'Saisonnier',
-]
+const contracts = ["CDD", "CDI", "Stage", "Saisonnier"]
 
 // Methods
-const addNewEmployee = () => {
+const addNewEmployee = async () => {
+  isSubmitProcessing.value = true
   submitSucces.success = false
-  employeeStore.addEmployee(employee).then(response => {
-    employeeStore.$state.submitErrors = []
-    form.value.reset()
-    submitSucces.success = true
-    submitSucces.message = "Ajouter avec succès !"
-    console.log(response)
-  }).catch(error => {
-    employeeStore.$state.submitErrors = error.response.data
-    console.log(error)
-  })
+  await employeeStore
+    .addEmployee(employee)
+    .then(response => {
+      employeeStore.$state.submitErrors = []
+      form.value.reset()
+      submitSucces.success = true
+      submitSucces.message = "Ajouter avec succès !"
+      console.log(response)
+    })
+    .catch(error => {
+      employeeStore.$state.submitErrors = error.response.data
+      console.log(error)
+    })
+  isSubmitProcessing.value = false
 }
 
 // Computed
@@ -67,7 +68,7 @@ onMounted(() => {
   teamStore.fetchTeams().then(() => {
     teams.value = teamStore.teamList
   })
-  
+
   employeeStore.$state.submitErrors = []
 })
 </script>
@@ -83,7 +84,7 @@ onMounted(() => {
             variant="tonal"
           >
             <div
-              v-for="(error, key ,index) in formErrors"
+              v-for="(error, key, index) in formErrors"
               :key="index"
               class="alert-body"
             >
@@ -235,7 +236,10 @@ onMounted(() => {
                 cols="12"
                 class="d-flex gap-4"
               >
-                <VBtn type="submit">
+                <VBtn
+                  type="submit"
+                  :loading="isSubmitProcessing"
+                >
                   Enregistrer
                 </VBtn>
 
@@ -256,6 +260,6 @@ onMounted(() => {
 </template>
 
 <route lang="yaml">
-  meta:
-    requiresAuth: true
+meta:
+  requiresAuth: true
 </route>

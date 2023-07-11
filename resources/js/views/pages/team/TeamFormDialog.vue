@@ -1,13 +1,13 @@
 <script setup>
-import AppTextarea from '@/@core/components/app-form-elements/AppTextarea.vue'
-import { useTeamStore } from '@/stores/TeamStore'
-import { reactive, ref } from 'vue'
+import AppTextarea from "@/@core/components/app-form-elements/AppTextarea.vue"
+import { useTeamStore } from "@/stores/TeamStore"
+import { reactive, ref } from "vue"
 
 const props = defineProps({
   teamData: Object,
 })
 
-const emits = defineEmits(['updateState'])
+const emits = defineEmits(["updateState"])
 const isDialogVisible = ref(false)
 const teamStore = useTeamStore()
 
@@ -16,47 +16,58 @@ const submitSucces = reactive({
   message: null,
 })
 
+const isSubmitProcessing = ref(false)
+
 // Function
-const addNewTeam = () => {
-  teamStore.addTeam(teamStore.$state.selectedTeam).then(response => {
-    submitSucces.success = true
-    submitSucces.message = "Ajouter avec succès !"
-    teamStore.resetSelectedTeam()
-    teamStore.fetchTeams()
-  }).catch(error => {
-    teamStore.$state.submitError = error.response.data
-    console.log(error)
-  })
+const addNewTeam = async () => {
+  isSubmitProcessing.value = true
+  await teamStore
+    .addTeam(teamStore.$state.selectedTeam)
+    .then(response => {
+      submitSucces.success = true
+      submitSucces.message = "Ajouter avec succès !"
+      teamStore.resetSelectedTeam()
+      teamStore.fetchTeams()
+    })
+    .catch(error => {
+      teamStore.$state.submitError = error.response.data
+      console.log(error)
+    })
 
   // console.log('Adding')
+  isSubmitProcessing.value = false
 }
 
-const updateATeam = () => {
-  teamStore.updateTeam(teamStore.$state.selectedTeam).then(response => {
-    submitSucces.success = true
-    submitSucces.message = "Mise a jour reussi !"
-    teamStore.resetSelectedTeam()
-    closeMe()
-    teamStore.fetchTeams()
-  }).catch(error => {
-    teamStore.$state.submitError = error.response.data
-    console.log(error)
-  })
+const updateATeam = async () => {
+  isSubmitProcessing.value = true
+  await teamStore
+    .updateTeam(teamStore.$state.selectedTeam)
+    .then(response => {
+      submitSucces.success = true
+      submitSucces.message = "Mise a jour reussi !"
+      teamStore.resetSelectedTeam()
+      closeMe()
+      teamStore.fetchTeams()
+    })
+    .catch(error => {
+      teamStore.$state.submitError = error.response.data
+      console.log(error)
+    })
+  isSubmitProcessing.value = false
 }
 
 const savePerform = () => {
   teamStore.$state.submitError = []
   submitSucces.success = false
-  if(teamStore.$state.selectedTeam.id) updateATeam()
+  if (teamStore.$state.selectedTeam.id) updateATeam()
   else addNewTeam()
 }
 
-const closeMe  = () => {
+const closeMe = () => {
   teamStore.$state.submitError = []
   submitSucces.success = false
-  emits('updateState', false)
+  emits("updateState", false)
 }
-
 
 // Computed
 const formErrors = computed(() => {
@@ -72,7 +83,6 @@ const formErrors = computed(() => {
     <!-- Dialog close btn -->
     <DialogCloseBtn @click="closeMe" />
 
-
     <!-- Dialog Content -->
     <VCard title="Team">
       <!-- Errors Alert Component -->
@@ -82,7 +92,7 @@ const formErrors = computed(() => {
           variant="tonal"
         >
           <div
-            v-for="(error, key ,index) in formErrors"
+            v-for="(error, key, index) in formErrors"
             :key="index"
             class="alert-body"
           >
@@ -132,7 +142,10 @@ const formErrors = computed(() => {
           >
             Fermer
           </VBtn>
-          <VBtn type="submit">
+          <VBtn
+            type="submit"
+            :loading="isSubmitProcessing"
+          >
             Enregistrer
           </VBtn>
         </VCardText>

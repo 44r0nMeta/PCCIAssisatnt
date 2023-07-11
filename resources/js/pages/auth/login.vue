@@ -25,6 +25,7 @@ const authThemeImg = useGenerateImageVariant(
 
 const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
 const isPasswordVisible = ref(false)
+const isSubmitProcessing = ref(false)
 const refVForm = ref()
 
 const creds = reactive({
@@ -39,6 +40,7 @@ const route = useRoute()
 let query = route.redirectedFrom?.fullPath
 
 const login = async () => {
+  isSubmitProcessing.value = true
   await authStore
     .login(creds)
     .then(() => {
@@ -47,6 +49,7 @@ const login = async () => {
     .catch(error => {
       authStore.$state.authErrors = error.response.data
     })
+  isSubmitProcessing.value = false
 }
 
 // watch(() => authStore.user, newVal => {
@@ -155,6 +158,7 @@ let errors = computed(() => {
 
                 <!-- login button -->
                 <VBtn
+                  :loading="isSubmitProcessing"
                   block
                   type="submit"
                 >
